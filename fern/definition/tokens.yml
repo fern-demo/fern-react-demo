@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+service:
+  base-path: /token
+  auth: true
+
+  endpoints:
+    getAllTokens:
+      display-name: Get all tokens
+      method: GET
+      path: ""
+      response: list<Token>
+      docs: Retrieves a list of all tokens.
+      examples:
+        - response:
+            body:
+              - $Token.ExampleTokenResponse
+
+    getTokenById:
+      display-name: Get token by ID
+      method: GET
+      path: /{id}
+      path-parameters:
+        id:
+          type: integer
+          docs: The ID of the token to fetch.
+      response: Token
+      errors:
+        - TokenNotFoundError
+      examples:
+        - path-parameters:
+            id: 101
+          response:
+            body: $Token.ExampleTokenResponse
+
+    createToken:
+      display-name: Create token
+      method: POST
+      path: ""
+      request: CreateTokenRequest
+      response: Token
+      docs: Creates a new token.
+      examples:
+        - request: $CreateTokenRequest.ExampleCreateTokenRequest
+          response:
+            body: $Token.ExampleTokenResponse
+
+types:
+  Token:
+    properties:
+      id: optional<integer>
+      value: optional<string>
+      expiryDate: optional<string>
+      type: optional<string>
+      status:
+        type: optional<string>
+        docs: The status of the token (e.g., "active", "expired").
+    examples:
+      - name: ExampleTokenResponse
+        value:
+          id: 101
+          value: "abc123xyz"
+          expiryDate: "2025-01-01"
+          type: "access"
+          status: "active"
+
+  CreateTokenRequest:
+    properties:
+      value: string
+      expiryDate: string
+      type: string
+    examples:
+      - name: ExampleCreateTokenRequest
+        value:
+          value: "abc123xyz"
+          expiryDate: "2025-01-01"
+          type: "access"
+
+errors:
+  TokenNotFoundError:
+    status-code: 404
+    type: Token

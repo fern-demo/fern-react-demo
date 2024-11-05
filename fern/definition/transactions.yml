@@ -1,0 +1,116 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+service:
+  base-path: /transactions
+  auth: true
+  
+  endpoints:
+    getAllTransactions:
+      display-name: Get all transactions
+      method: GET
+      path: ""
+      response: list<Transaction>
+      docs: Retrieves a list of all transactions.
+      examples:
+        - response:
+            body:
+              - $Transaction.ExampleTransactionResponse
+
+    getTransactionById:
+      display-name: Get transaction by ID
+      method: GET
+      path: /{id}
+      path-parameters:
+        id:
+          type: integer
+          docs: The ID of the transaction to fetch.
+      response: Transaction
+      errors:
+        - TransactionNotFoundError
+      examples:
+        - path-parameters:
+            id: 1001
+          response:
+            body: $Transaction.ExampleTransactionResponse
+
+    createTransaction:
+      display-name: Create transaction
+      method: POST
+      path: ""
+      request: CreateTransactionRequest
+      response: Transaction
+      docs: Creates a new transaction.
+      examples:
+        - request: $CreateTransactionRequest.ExampleCreateTransactionRequest
+          response:
+            body: $Transaction.ExampleTransactionResponse
+
+    updateTransactionById:
+      display-name: Update transaction by ID
+      method: PUT
+      path: /{id}
+      path-parameters:
+        id:
+          type: integer
+          docs: The ID of the transaction to update.
+      request: UpdateTransactionRequest
+      response: Transaction
+      examples:
+        - path-parameters:
+            id: 1001
+          request: $UpdateTransactionRequest.ExampleTransactionUpdate
+          response:
+            body: $Transaction.ExampleTransactionResponse
+
+types:
+  Transaction:
+    properties:
+      id: optional<integer>
+      amount: optional<float>
+      currency: optional<string>
+      date: optional<string>
+      description: optional<string>
+      status:
+        type: optional<string>
+        docs: The current status of the transaction (e.g., "pending", "completed").
+    examples:
+      - name: ExampleTransactionResponse
+        value:
+          id: 1001
+          amount: 250.75
+          currency: USD
+          date: "2024-11-03"
+          description: "Payment for order #12345"
+          status: "completed"
+
+  CreateTransactionRequest:
+    properties:
+      amount: float
+      currency: string
+      date: string
+      description: optional<string>
+    examples:
+      - name: ExampleCreateTransactionRequest
+        value:
+          amount: 250.75
+          currency: USD
+          date: "2024-11-03"
+          description: "Payment for order #12345"
+
+  UpdateTransactionRequest:
+    properties:
+      amount: optional<float>
+      currency: optional<string>
+      date: optional<string>
+      description: optional<string>
+      status: optional<string>
+    examples:
+      - name: ExampleTransactionUpdate
+        value:
+          amount: 275.00
+          status: "completed"
+
+errors:
+  TransactionNotFoundError:
+    status-code: 404
+    type: Transaction

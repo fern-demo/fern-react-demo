@@ -1,0 +1,40 @@
+instances:
+  - url: react-demo.docs.buildwithfern.com
+  
+# React is enabled here
+experimental:
+  mdx-components:
+    - ./components # relative path to where the React components are defined
+  
+navigation:
+  - page: Welcome
+    icon: fa-regular fa-wave
+    path: ./docs/pages/welcome.mdx
+    
+navbar-links: 
+  - type: minimal
+    text: Join Community
+    url: https://buildwithfern.com/
+  - type: filled
+    text: Log In
+    url: https://buildwithfern.com/
+    rightIcon: fa-solid fa-caret-right
+
+layout: 
+  searchbar-placement: header
+
+colors:
+  accent-primary:
+    dark: "#ffffff"
+    light: "#000000"
+  background:
+    dark: "#000000"
+    light: "#ffffff"
+
+logo:
+  dark: ./docs/assets/logo-dark.svg
+  light: ./docs/assets/logo-light.svg
+  height: 20
+  href: /welcome
+
+favicon: ./docs/assets/favicon.png

@@ -1,0 +1,189 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+service:
+  base-path: /user
+  auth: true
+
+  endpoints:
+    getUserById:
+      display-name: Get user by ID
+      method: GET
+      path: /{id}
+      path-parameters:
+        id:
+          type: integer
+          docs: The unique identifier of the user to fetch.
+      response: User
+      errors:
+        - UserNotFoundError
+      examples:
+        - path-parameters:
+            id: 101
+          response: 
+            body: $User.ExampleUserResponse
+
+    getAllUsers:
+      display-name: Get all users
+      method: GET
+      path: ""
+      response: list<User>
+      docs: Retrieves a list of all users in the system.
+      examples:
+        - response: 
+            body: 
+              - $User.ExampleUserResponse
+
+    createUser:
+      display-name: Create user
+      docs: Creates a new user in the system.
+      method: POST
+      path: ""
+      request: CreateUserRequest
+      response: User
+      examples:
+        - request: $CreateUserRequest.ExampleCreateUserRequest
+          response: 
+            body: $User.ExampleUserResponse
+          code-samples:
+            - sdk: typescript
+              code: |-
+                import "Client" from "your-package";
+                
+                const client = new Client({ token: "YOUR_TOKEN" });
+                await client.user.createUser({
+                    username: "techenthusiast",
+                    firstName: "Alex",
+                    lastName: "Smith",
+                    email: "alex.smith@example.com",
+                    phone: "5551234567"
+                });
+
+    updateUserById:
+      display-name: Update user by ID
+      docs: Updates a user’s information using their unique ID.
+      method: POST
+      path: /{id}
+      path-parameters:
+        id:
+          type: integer
+          docs: The unique identifier of the user to update.
+      request: UpdateUserRequest
+      response: User
+      examples:
+        - path-parameters:
+            id: 101
+          request: $UpdateUserRequest.ExampleUserUpdate
+          response:
+            body: $User.ExampleUserResponse
+        
+types:
+  User:
+    properties:
+      id:
+        type: optional<integer>
+        docs: Unique identifier for the user.
+      username:
+        type: optional<string>
+        docs: The username chosen by the user for login and identification.
+      firstName:
+        type: optional<string>
+        docs: The user’s first name.
+      lastName:
+        type: optional<string>
+        docs: The user’s last name.
+      email:
+        type: optional<string>
+        docs: The email address associated with the user.
+      password:
+        type: optional<string>
+        docs: The user’s password for authentication.
+      phone:
+        type: optional<string>
+        docs: The user’s contact phone number.
+      userStatus:
+        type: optional<integer>
+        docs: The status of the user (e.g., 1 for active, 0 for inactive).
+    examples:
+      - name: ExampleUserResponse
+        value:
+          id: 101
+          username: techenthusiast
+          firstName: Alex
+          lastName: Smith
+          email: alex.smith@example.com
+          password: password123
+          phone: "5551234567"
+          userStatus: 1
+
+  CreateUserRequest:
+    properties:
+      username:
+        type: optional<string>
+        docs: Desired username for the new user.
+      firstName:
+        type: optional<string>
+        docs: First name of the new user.
+      lastName:
+        type: optional<string>
+        docs: Last name of the new user.
+      email:
+        type: optional<string>
+        docs: Email address for the new user.
+      password:
+        type: optional<string>
+        docs: Password for the new user's account.
+      phone:
+        type: optional<string>
+        docs: Contact phone number for the new user.
+    examples:
+      - name: ExampleCreateUserRequest
+        value:
+          username: techenthusiast
+          firstName: Alex
+          lastName: Smith
+          email: alex.smith@example.com
+          phone: "5551234567"
+
+  UpdateUserRequest:
+    properties:
+      id:
+        type: integer
+        docs: The unique identifier for the user being updated.
+      username:
+        type: optional<string>
+        docs: Updated username for the user.
+      firstName:
+        type: optional<string>
+        docs: Updated first name of the user.
+      lastName:
+        type: optional<string>
+        docs: Updated last name of the user.
+      email:
+        type: optional<string>
+        docs: Updated email address for the user.
+      password:
+        type: optional<string>
+        docs: New password for the user’s account.
+      phone:
+        type: optional<string>
+        docs: Updated contact phone number for the user.
+    examples:
+      - name: ExampleUserUpdate
+        value:
+          id: 101
+          email: alex.smith@example.com
+
+  CreateUsersWithListInputRequest: 
+    type: list<User>
+    docs: Request body containing a list of users to be created.
+
+errors:
+  UserNotFoundError:
+    status-code: 404
+    docs: Returned when the requested user does not exist.
+  InvalidUsernameOrPasswordError:
+    status-code: 400
+    docs: Returned when the provided username or password is invalid.
+  InvalidUsernameError:
+    status-code: 400
+    docs: Returned when the specified username does not meet validation requirements.

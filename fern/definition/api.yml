@@ -1,0 +1,14 @@
+name: api
+docs: |-
+    This API definition is written using the Fern Definition format. It's based on the Plantstore 3.0 OpenAPI definition example provided by
+    Swagger [http://swagger.io](http://swagger.io). 
+error-discrimination:
+  strategy: status-code
+auth: bearer
+auth-schemes:
+  bearer:                     
+    scheme: bearer
+environments:
+  Production: https://api.yourcompany.io/api/v3
+  Sandbox: https://sandbox.api.yourcompany.io/api/v3
+default-environment: Production
