@@ -38,3 +38,6 @@ logo:
   href: /welcome
 
 favicon: ./docs/assets/favicon.png
+
+css: 
+  - ./docs/assets/styles.css
